@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: randomgift
+      POSTGRES_USER: randomgift
+      POSTGRES_PASSWORD: randomgift_dev
+    ports: ["5432:5432"]
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U randomgift -d randomgift"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://randomgift:randomgift_dev@db:5432/randomgift
+      FRONTEND_ORIGIN: http://localhost:3000
+      COOKIE_SECURE: "false"
+      MAIL_HOST: mailhog
+      MAIL_PORT: "1025"
+    ports: ["8000:8000"]
+    depends_on:
+      db:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    ports: ["8025:8025"]
+
+volumes:
+  postgres_data:

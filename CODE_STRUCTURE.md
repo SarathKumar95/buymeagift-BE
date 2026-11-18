@@ -16,7 +16,7 @@ reusability and maintainability.
 
 ## Directory Structure
 
-backend/src/
+backend/app/
 
     modules/
         user/
@@ -40,8 +40,6 @@ backend/src/
         cache/
         storage/
         observability/
-
-    workers/
 
     api.py
     main.py
@@ -160,3 +158,10 @@ infrastructure instead of duplicating business logic.
 - Create the FastAPI application.
 - Configure application lifespan.
 - Initialize and shut down shared resources.
+
+## Current implementation note
+
+The current persistence implementation uses synchronous SQLAlchemy sessions. This is
+centralized in `infrastructure/database.py`; repositories are the only modules that
+execute ORM queries. A conversion to SQLAlchemy's async engine is intentionally a
+separate migration because it requires a driver, dependency, and test-suite change.

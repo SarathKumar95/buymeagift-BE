@@ -102,3 +102,9 @@ without explaining why it is necessary.
 If an existing implementation violates these rules,
 identify the issue and propose a refactoring plan
 before making structural changes.
+
+## Documentation Ownership
+
+- `AGENTS.md` and `CODE_STRUCTURE.md` are governing reference documents.
+- Do not modify them unless the user explicitly requests a documentation update.
+- If an implementation differs from these documents, report the deviation and ask for approval before editing either file.

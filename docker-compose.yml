@@ -13,6 +13,19 @@ services:
       timeout: 5s
       retries: 10
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: secret
+    ports:
+      - "5051:80"
+    depends_on:
+      - db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+  
+
   api:
     build: .
     env_file: .env
@@ -35,3 +48,4 @@ services:
 
 volumes:
   postgres_data:
+  pgadmin_data:

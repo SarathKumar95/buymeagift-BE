@@ -34,9 +34,11 @@ def logout(response: Response): clear_session_cookie(response); return {"message
 
 @router.get("/verify-email")
 def verify_email(token: str, db: Session = Depends(get_db)):
-    try: user = AuthService(db).verify_email(token)
-    except InvalidVerificationTokenError: raise HTTPException(400, "This confirmation link is invalid or has expired")
-    response = RedirectResponse(url=settings.frontend_after_login)
+    try:
+        user = AuthService(db).verify_email(token)
+    except InvalidVerificationTokenError:
+        return RedirectResponse(url=f"{settings.frontend_verification_url}?status=invalid", status_code=303)
+    response = RedirectResponse(url=f"{settings.frontend_verification_url}?status=confirmed", status_code=303)
     set_session_cookie(response, user.id)
     return response
 
